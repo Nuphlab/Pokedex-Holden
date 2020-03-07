@@ -8,6 +8,27 @@
 
 import UIKit
 
+    extension UIImageView {
+        func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+            contentMode = mode
+            URLSession.shared.dataTask(with: url) { data, response, error in
+                guard
+                    let httpURLResponse = response as? HTTPURLResponse, httpURLResponse.statusCode == 200,
+                    let mimeType = response?.mimeType, mimeType.hasPrefix("image"),
+                    let data = data, error == nil,
+                    let image = UIImage(data: data)
+                    else { return }
+                DispatchQueue.main.async() {
+                    self.image = image
+                }
+            }.resume()
+        }
+        func downloaded(from link: String, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
+            guard let url = URL(string: link) else { return }
+            downloaded(from: url, contentMode: mode)
+        }
+    }
+
 class PokemonViewController: UIViewController {
     
     @IBOutlet weak var imageView: UIImageView!
@@ -25,6 +46,7 @@ class PokemonViewController: UIViewController {
     var type = ""
     var height = 0
     var weight = 0
+    var image = ""
     
     
     struct PokeHIW: Decodable{
@@ -47,10 +69,9 @@ class PokemonViewController: UIViewController {
         let name: String
     }
     struct pokeImage: Decodable {
-        let front_default: URL
+        let front_default: String
     }
 
-    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -60,12 +81,15 @@ class PokemonViewController: UIViewController {
         self.downloadJSON {
         self.downloadJSON {
             self.nameLabel.text = self.name.uppercased()
-            self.typeLabel.text = "TYPE: \(self.type.count)"
-            self.heightLabel.text = "HEIGHT: \(self.height)"
-            self.weightLabel.text = "WEIGHT: \(self.weight)"
+            self.typeLabel.text = "TYPE: \(self.type.uppercased())"
+            self.heightLabel.text = "HEIGHT: \(self.height) dm"
+            self.weightLabel.text = "WEIGHT: \(self.weight) lbs"
+            let urlString = self.image
+            let url = URL(string: urlString)
+            self.imageView.downloaded(from: url!)
+            
             }
         }
-        
         
         nameLabel.text = name
         typeLabel.text = type
@@ -73,55 +97,31 @@ class PokemonViewController: UIViewController {
         weightLabel.text = "\(weight)"
     }
         
-        func downloadJSON(completed: @escaping () -> ()) {
-            let url = URL(string: "\(pokeUrl)/")
-                URLSession.shared.dataTask(with: url!) {(data, response, error) in
+    func downloadJSON(completed: @escaping () -> ()) {
+        let url = URL(string: "\(pokeUrl)/")
+        URLSession.shared.dataTask(with: url!) {(data, response, error) in
+            
+            if error == nil {
+                do {
+                    var model = try JSONDecoder().decode(PokeHIW.self, from: data!)
                     
-                    if error == nil {
-                        do {
-                            var model = try JSONDecoder().decode(PokeHIW.self, from: data!)
-                            
-                            DispatchQueue.main.async {
-                                completed()
-                            }
-                            
-                            self.name = model.forms[0].name
-                            if model.types.count == 1 {
-                                print(model.types[0].type)
-                                self.type = "\(model.types[0].type)"
-                            }else {
-                                self.type = "\(model.types[1].type) - \(model.types[0].type)"
-                            }
-                            self.height = model.height
-                            self.weight = model.weight
-                            
-                        }catch {
-                            print("Pokemon View JSON Error")
-                        }
+                    DispatchQueue.main.async {
+                        completed()
                     }
+                    self.image = model.sprites.front_default
+                    self.name = model.forms[0].name
+                    if model.types.count < 2 {
+                        self.type = "\(model.types[0].type.name)"
+                    }else {
+                        self.type = "\(model.types[1].type.name) - \(model.types[0].type.name)"
+                    }
+                    self.height = model.height
+                    self.weight = model.weight
                     
-                }.resume()
+                }catch {
+                    print("Pokemon View JSON Error")
+                }
             }
-        
-        
-        /*
-        var pokeStats: PokeHIW?
-        
-        nameLabel.text = pokeStats?.forms[0].name
-        weightLabel.text = "\(pokeStats?.weight)"
-        heightLabel.text = "\(pokeStats?.height)"
-        typeLabel.text = pokeStats?.types[0].type.name */
-        
+        }.resume()
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
+}
