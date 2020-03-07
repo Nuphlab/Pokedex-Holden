@@ -4,5 +4,5 @@ This is a Swift Pokemon App made for the iPhone. The goal of the project is to l
 
 All images and characters shown are property of the Pokemon company.
 
-![image](https://user-images.githubusercontent.com/56048443/76143219-b7698a80-6032-11ea-94e2-59da1d2176af.png)
+![image](https://user-images.githubusercontent.com/56048443/76143266-3232a580-6033-11ea-8747-d2eea6f92a6e.png)
 ![image](https://user-images.githubusercontent.com/56048443/76143240-d49e5900-6032-11ea-8d4d-b004d78b4947.png)
