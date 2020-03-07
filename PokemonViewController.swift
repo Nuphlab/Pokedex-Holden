@@ -54,6 +54,19 @@ class PokemonViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        view.tintColor = UIColor.red
+        view.backgroundColor = .systemIndigo
+        
+        self.downloadJSON {
+        self.downloadJSON {
+            self.nameLabel.text = self.name.uppercased()
+            self.typeLabel.text = "TYPE: \(self.type.count)"
+            self.heightLabel.text = "HEIGHT: \(self.height)"
+            self.weightLabel.text = "WEIGHT: \(self.weight)"
+            }
+        }
+        
+        
         nameLabel.text = name
         typeLabel.text = type
         heightLabel.text = "\(height)"
@@ -74,6 +87,7 @@ class PokemonViewController: UIViewController {
                             
                             self.name = model.forms[0].name
                             if model.types.count == 1 {
+                                print(model.types[0].type)
                                 self.type = "\(model.types[0].type)"
                             }else {
                                 self.type = "\(model.types[1].type) - \(model.types[0].type)"
