@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--PokeDex-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ViewController" customModule="ParseJSON" customModuleProvider="target" sceneMemberID="viewController">
@@ -21,10 +21,10 @@
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                             </tableView>
                         </subviews>
-                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <color key="backgroundColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
-                    <navigationItem key="navigationItem" id="TQ0-Pl-6UF"/>
+                    <navigationItem key="navigationItem" title="PokeDex" id="TQ0-Pl-6UF"/>
                     <connections>
                         <outlet property="tableView" destination="KLU-LR-Znt" id="zTk-Ny-oQM"/>
                         <segue destination="gMS-5F-cEE" kind="show" identifier="showDetails" id="8ib-ed-q6Z"/>
@@ -80,7 +80,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="nHZ-v7-Ow2"/>
                     <connections>
-                        <outlet property="heightLable" destination="bfM-5X-Sis" id="elI-PR-Hlw"/>
+                        <outlet property="heightLabel" destination="bfM-5X-Sis" id="5E0-eF-eG3"/>
                         <outlet property="imageView" destination="c9P-ws-fmU" id="MLm-q9-MZp"/>
                         <outlet property="nameLabel" destination="JHM-UA-auq" id="ow1-iW-VKp"/>
                         <outlet property="typeLabel" destination="87N-s8-pgq" id="GuV-4P-DLO"/>
