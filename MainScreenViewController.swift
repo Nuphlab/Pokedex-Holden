@@ -5,10 +5,10 @@
 //  Created by Westley Holden on 3/4/20.
 //  Copyright © 2020 Wes. All rights reserved.
 //
-//var collection: [InitialScreenData] = []
 
 import UIKit
 
+//Data models for json data received from api
 struct PokeName: Decodable {
     let results: [info]
 }
@@ -27,6 +27,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        //Reloads data to MainScreenViewController
         downloadJSON {
             self.tableView.reloadData()
         }
@@ -44,6 +45,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     
     var cellUrl = ""
     
+    //Displays 807 pokemon sorted by id
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: nil)
         cell.backgroundColor = .systemPink
@@ -58,6 +60,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         performSegue(withIdentifier: "showDetails", sender: self)
     }
     
+    //Passes url from json data to PokemonViewController
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let vc = segue.destination as? PokemonViewController{
             vc.pokeUrl = pokeArray[(tableView.indexPathForSelectedRow?.row)!].url
@@ -65,7 +68,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         }
     }
     
-        
+    //Gathers name and url for all 807 pokemon
     func downloadJSON(completed: @escaping () -> ()) {
         let url = URL(string: "https://pokeapi.co/api/v2/pokemon/?limit=807")
         URLSession.shared.dataTask(with: url!) {(data, respone, error) in

@@ -7,7 +7,8 @@
 //
 
 import UIKit
-
+    
+    //Gathers image from api data and applies it to the current view
     extension UIImageView {
         func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {  // for swift 4.2 syntax just use ===> mode: UIView.ContentMode
             contentMode = mode
@@ -41,6 +42,7 @@ class PokemonViewController: UIViewController {
     
     @IBOutlet weak var typeLabel: UILabel!
     
+    //Variables derived from json
     var pokeUrl = ""
     var name = ""
     var type = ""
@@ -48,9 +50,8 @@ class PokemonViewController: UIViewController {
     var weight = 0
     var image = ""
     
-    
+    //Models for data received using the html passed from MainScreenViewController
     struct PokeHIW: Decodable{
-        //Pokemon Name
         let forms: [PokemonName]
         let height: Int
         let id: Int
@@ -78,8 +79,10 @@ class PokemonViewController: UIViewController {
         view.tintColor = UIColor.red
         view.backgroundColor = .systemIndigo
         
+        //Reloads data to allow variables access to current pokemon page
         self.downloadJSON {
         self.downloadJSON {
+            //Image and Label variables for PokemonViewController
             self.nameLabel.text = self.name.uppercased()
             self.typeLabel.text = "TYPE: \(self.type.uppercased())"
             self.heightLabel.text = "HEIGHT: \(self.height) dm"
@@ -87,16 +90,15 @@ class PokemonViewController: UIViewController {
             let urlString = self.image
             let url = URL(string: urlString)
             self.imageView.downloaded(from: url!)
-            
             }
         }
-        
         nameLabel.text = name
         typeLabel.text = type
         heightLabel.text = "\(height)"
         weightLabel.text = "\(weight)"
     }
-        
+    
+    //Retrieves data from individual poke page
     func downloadJSON(completed: @escaping () -> ()) {
         let url = URL(string: "\(pokeUrl)/")
         URLSession.shared.dataTask(with: url!) {(data, response, error) in
@@ -108,6 +110,7 @@ class PokemonViewController: UIViewController {
                     DispatchQueue.main.async {
                         completed()
                     }
+                    
                     self.image = model.sprites.front_default
                     self.name = model.forms[0].name
                     if model.types.count < 2 {
@@ -117,7 +120,7 @@ class PokemonViewController: UIViewController {
                     }
                     self.height = model.height
                     self.weight = model.weight
-                    
+            
                 }catch {
                     print("Pokemon View JSON Error")
                 }
